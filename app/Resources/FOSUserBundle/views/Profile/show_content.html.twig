@@ -1,0 +1,16 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="fos_user_user_show">
+    <p>{{ 'profile.show.username'|trans }}: {{ user.username }}</p>
+    <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
+    <p class="btn btn-primary " style="width: 100%;" onclick="returnA()"><i class="ion-android-settings"></i>&nbsp;Return to Admin</p>
+    
+</div>
+<script>
+ function returnA(){ 
+   
+    document.location.href="{{path('sonata_admin_dashboard')}}";
+}
+
+
+</script>

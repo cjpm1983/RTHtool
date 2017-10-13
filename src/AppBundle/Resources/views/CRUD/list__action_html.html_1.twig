@@ -1,0 +1,32 @@
+<a class="btn btn-sm btn-default edit_link" href="#" data-toggle="modal" data-target="#myModal-{{object.getId()}}">&nbsp;<i class="fa fa-code"></i>&nbsp;</a>
+
+            <!-- Modal -->
+            <div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" id="myModal-{{object.getId()}}" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close eventocerrar" data-dismiss="modal">&times;</button>
+                            <h3 class="modal-title">Html Code</h3>&nbsp;<!--a class="btn btn-success" onclick="copyToClipboard()">Copy</a-->
+                        </div>
+                        <div class="modal-body">
+                            <textarea id="htmlcode-{{object.getId()}}" contenteditable="false" style="width: 90%;height: 400px;">{{object.getPost()|raw}}</textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default eventocerrar" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <script>
+                            function copyToClipboard() {
+                              $('#htmlcode-{{object.getId()}}').select();
+                              
+                              try{
+                                  var successful=document.execCommand('copy');
+                              }
+                              catch(err){
+                                  console.log("Sorry, could not copy to clipboard. Try manually.")
+                                  alert("Sorry, could not copy to clipboard. Try manually.")
+                              }
+                            </script>

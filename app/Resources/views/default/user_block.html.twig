@@ -1,0 +1,21 @@
+{% block user_block %}
+{# Customize this value #}
+<!--spam class="color-light-grey">username: {# app.user.username #}</spam-->
+<p class="btn btn-lg " style="" onclick="changeP()"><i class="ion-locked"></i>&nbsp;Change Password</p>
+<p class="btn btn-lg " style="" onclick="logout()"><i class="ion-android-exit"></i>&nbsp;Logout</p>
+
+
+
+<script>
+ function logout(){ 
+   
+    document.location.href="{{path('fos_user_security_logout')}}";
+}
+
+ function changeP(){ 
+   
+    document.location.href="{{path('fos_user_change_password')}}";
+}
+
+</script>
+{% endblock %}

@@ -1,0 +1,188 @@
+
+{% extends base_template %}
+
+{% block title %}
+    {% if admin.id(object) is not null %}
+        {{ "title_edit"|trans({'%name%': admin.toString(object)|truncate(15) }, 'SonataAdminBundle') }}
+    {% else %}
+        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+    {% endif %}
+{% endblock %}
+
+{% block navbar_title %}
+    {{ block('title') }}
+{% endblock %}
+
+
+{%- block actions -%}
+{#
+    {% include 'SonataAdminBundle:CRUD:action_buttons.html.twig' %}
+#}
+{%- endblock -%}
+
+
+{% block tab_menu %}{{ knp_menu_render(admin.sidemenu('clone'), {'currentClass' : 'active', 'template': sonata_admin.adminPool.getTemplate('tab_menu_template')}, 'twig') }}{% endblock %}
+
+
+{% use 'SonataAdminBundle:CRUD:base_edit_form.html.twig' with form as parentForm %}
+{% import "SonataAdminBundle:CRUD:base_edit_form_macro.html.twig" as form_helper %}
+
+
+
+{% block form %}
+    
+    
+    <div id="app">
+        
+        <p>Created at: &nbsp;{{object.getFechaCreado()|date('F jS, Y')}}</p>
+    
+        <form action="{{  path('editorpost',{'id':admin.id(object)}) }}" onsubmit="hidrateinvisible()">
+
+       <p>Title: </p>
+        <input type="text" name="titulo" id="titulo" style="width: 100%" value="{{object.getTitulo()}}"/>
+        
+       
+                {# form_row(form['titulo'])#}
+            
+        </br>
+      </br>  
+      
+        <p>Date</p>
+        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+            <div class="input-group">
+                <div class="input-group date" id="fechaCreado">
+                    <input type="text" id="fechaCreado" name="fechaCreado" class="sonata-medium-date form-control" data-date-format="YYYY-MM-DD" value="{{object.getFechaCreado()|date('Y-m-d')}}" >
+                            <span class="input-group-addon">
+                                <span class="fa-calendar fa">
+                        
+                                </span>
+                            
+                            </span>
+                </div>
+            </div>
+        <script type="text/javascript">
+            jQuery(function ($) {
+                $('#fechaCreado').datetimepicker({"pickTime":false,"useCurrent":true,"minDate":"1\/1\/1900","maxDate":null,"showToday":true,"language":"en","defaultDate":"","disabledDates":[],"enabledDates":[],"icons":{"time":"fa fa-clock-o","date":"fa fa-calendar","up":"fa fa-chevron-up","down":"fa fa-chevron-down"},"useStrict":false,"sideBySide":false,"daysOfWeekDisabled":[],"useSeconds":false});
+            });
+        </script> 
+        </div>
+        
+        
+        </br>
+           <p>Post: </p>
+        <textarea name='editor' id='editor'>
+        {{object.getpost|raw}}
+        </textarea>
+            
+        <!--el proposito del invisible es capturar por javascript el raw en el para obtener la ruta real de la imagen-->
+        <textarea name='invisible' id="invisible" hidden></textarea>
+        
+    
+    <!--input type="button" value="HTML" onclick="jquerypost()"/-->
+
+    
+</br>
+
+<button type="submit" class="btn btn-success" name="btn_update" ><i class="fa fa-save"></i> Save</button>
+
+</form>
+
+</div>
+
+<script src="{{ asset('bundles/app/js/tinymce/tinymce.min.js') }}" ></script>
+<!--script src="{# asset('bundles/app/js/vue.min.js') }}"></script>
+<script src="{{ asset('bundles/app/js/vue-resource.js') #}"></script-->
+
+
+
+
+
+<script>
+    
+    function hidrateinvisible(){
+        $('#invisible').text(tinymce.activeEditor.getContent({format: 'raw'}));
+        //alert($('#invisible').val());
+    }
+            
+ tinymce.init({
+  selector: '#editor',
+  height:500,
+  plugins: 'image code',
+  /*
+   * 
+   /*
+  menubar: false,
+  toolbar1: 'styleselect | bold italic | link image ',
+  toolbar2: 'alignleft aligncenter alignright save ',
+  toolbar3: 'bold italic underline strikethrough superscript subscript | formats | removeformat',
+  toolbar4: 'undo redo | copy paste | link image | spellchecker | code',
+  */
+  plugins: 'print preview fullpage image code searchreplace autolink directionality visualblocks visualchars fullscreen image link template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount colorpicker textpattern help',
+  toolbar1: 'formatselect | bold italic underline strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
+  image_advtab: true,
+  templates: [
+    { title: 'RTH Picture Footer', content: '<p class="photo">Insert this text and replace it for your photo footer description, It already have the RTH class <p></br>' },
+    { title: 'Other Predefined html template', content: 'Test 2' }
+  ],
+//
+//
+//toolbar1: 'undo redo | styleselect | bold italic | link image',
+  //toolbar2: 'alignleft aligncenter alignright',
+//images_upload_credentials : true,
+  // enable title field in the Image dialog
+  image_title: true, 
+  // enable automatic uploads of images represented by blob or data URIs
+  automatic_uploads: true,
+  // URL of our upload handler (for more details check: https://www.tinymce.com/docs/configure/file-image-upload/#images_upload_url)
+  //images_upload_url: 'http://localhost/images/postAcceptor.php',
+  images_upload_url: '{{path('postacceptor')}}',
+  // here we add custom filepicker only to Image dialog
+  file_picker_types: 'image', 
+  // and here's our custom image picker
+  file_picker_callback: function(cb, value, meta) {
+    var input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+      selector: 'textarea',  // change this value according to your html
+    
+    
+    // Note: In modern browsers input[type="file"] is functional without 
+    // even adding it to the DOM, but that might not be the case in some older
+    // or quirky browsers like IE, so you might want to add it to the DOM
+    // just in case, and visually hide it. And do not forget do remove it
+    // once you do not need it anymore.
+
+    input.onchange = function() {
+      var file = this.files[0];
+      
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        // Note: Now we need to register the blob in TinyMCEs image blob
+        // registry. In the next release this part hopefully won't be
+        // necessary, as we are looking to handle it internally.
+        var id = 'blobid' + (new Date()).getTime();
+        var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+        var base64 = reader.result.split(',')[1];
+        var blobInfo = blobCache.create(id, file, base64);
+        blobCache.add(blobInfo);
+
+        // call the callback and populate the Title field with the file name
+       // cb(blobInfo.blobUri(), { title: file.name });
+        cb(blobInfo.blobUri(), { title: file.name });
+        
+        //$("input[class='mce-textbox mce-abs-layout-item mce-first']").text('100');
+             
+
+      };
+      
+    };
+    
+    input.click();
+    $("input[aria-label='Width']").text( "100");   
+      $("input[aria-label='Width']").css( "background","orange");   
+  }
+});
+
+  </script>
+        {% endblock %}

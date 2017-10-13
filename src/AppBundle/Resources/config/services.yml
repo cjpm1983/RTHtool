@@ -1,0 +1,22 @@
+services:
+
+    app.imagen.twig.message_extension:
+        class: AppBundle\Twig\ImagenExtension
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+          - { name: twig.extension }   
+          
+    app.admin.hammerpost:
+        class: AppBundle\Admin\HammerpostAdmin
+        arguments: [~, AppBundle\Entity\Hammerpost, AppBundle:HammerpostAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Manage Hammerposts }
+    
+    app.admin.user:
+        class: AppBundle\Admin\UserAdmin
+        arguments: [~, AppBundle\Entity\User, AppBundle:UserAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Manage Users }
+            
+
+

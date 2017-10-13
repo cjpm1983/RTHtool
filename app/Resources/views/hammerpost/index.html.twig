@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Hammerpost list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Post</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for hammerpost in hammerposts %}
+            <tr>
+                <td><a href="{{ path('hammerpost_show', { 'id': hammerpost.id }) }}">{{ hammerpost.id }}</a></td>
+                <td>{{ hammerpost.post }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('hammerpost_show', { 'id': hammerpost.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('hammerpost_edit', { 'id': hammerpost.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('hammerpost_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

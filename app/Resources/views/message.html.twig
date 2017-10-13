@@ -1,0 +1,32 @@
+{#% for tipo, mensajes in app.session.flashbag.all() %}
+    <script>
+    var myStack = {"dir1": "up", "dir2": "left", "firstpos1": 25, "firstpos2": 25};
+    $(document).ready(function() {
+    {% for mensaje in mensajes %}
+                new PNotify({
+                    title: 'Mensaje',
+                    text: '{{ mensaje }}',
+                    type: '{{ tipo }}',
+                    addclass: "stack-bottomright",
+                    stack: myStack
+                });
+    {% endfor %}
+    });
+    </script>
+{% endfor %}
+
+{% if errors is defined %}
+    <div style="margin-top: 40px" class="alert alert-dismissible alert-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {% block errors %} {% endblock %}
+    </div>
+{% endif %#}
+
+{% for type, messages in app.session.flashbag.all() %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }}">
+            <button class="close" data-dismiss="alert"></button>
+            {% if type == 'warning' %}<span class="badge badge-important"><strong> ¡¡ ATENCION !! </strong></span>{% endif %} {{ message | trans }}
+        </div>
+    {% endfor %}
+{% endfor %}

@@ -1,0 +1,3 @@
+solo carpeta raices para guardar fotos, no parece ser htaccess porque guarda en cualquier carpeta raiz
+tratar de que el campo post no sea obligatorio al crear un nuevo post
+ponerle el codigo para editar a la pagina del Post
